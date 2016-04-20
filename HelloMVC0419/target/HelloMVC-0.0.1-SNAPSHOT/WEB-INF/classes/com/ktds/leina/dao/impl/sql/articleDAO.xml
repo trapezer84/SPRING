@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+						"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 현재 편집하는 DB의 DAO -->
+<mapper namespace="ArticleDAO">
+	<!-- resultType 은 return 타입을 결정하는 것, mybatis는 소문자를 지원하므로 string을 소문자로 작성 -->
+	<select id="getNowSystemDate" resultType="string">
+	<!-- 여기에 query 작성 (세미클론 적지 않는다)-->
+	SELECT	SYSDATE
+	FROM	DUAL
+	</select>
+</mapper>						
