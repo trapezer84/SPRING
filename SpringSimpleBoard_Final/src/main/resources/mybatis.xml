@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+							"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	
+	<typeAliases>
+		<typeAlias type="com.ktds.bhyu.article.vo.ArticleVO" alias="ArticleVO"/>
+		<typeAlias type="com.ktds.bhyu.handler.socket.vo.Answer" alias="Answer"/>
+		<typeAlias type="com.ktds.bhyu.article.vo.ArticleSearchVO" alias="ArticleSearchVO"/>
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="/com/ktds/bhyu/handler/socket/dao/impl/sql/paintDAO.xml" />
+		<mapper resource="/com/ktds/bhyu/article/dao/impl/sql/articleDAO.xml" />
+	</mappers>
+	
+</configuration>

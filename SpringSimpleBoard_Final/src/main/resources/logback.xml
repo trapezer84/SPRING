@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>
+				▶%-5level %d{HH:mm:ss.SSS} [%thread] %logger[%method:%line] - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+	<appender name="file" class="ch.qos.logback.core.FileAppender">
+		<file>d:\logfile.log</file>
+		<append>true</append>
+		<encoder>
+			<pattern>
+				▶%-5level %d{HH:mm:ss.SSS} [%thread] %logger[%method:%line] - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+	
+	<logger name="org.springframework" level="TRACE" /> <!-- 패키지가 org.springframework로 시작하는 것들은 INFO로 찍어라 -->
+	
+	<root level="TRACE">
+		<appender-ref ref="file" /> <!-- 위 appender console을 쓰겠다는 것 -->
+		<appender-ref ref="console" /> <!-- 위 appender console을 쓰겠다는 것 -->
+	</root>
+</configuration>
