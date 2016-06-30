@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+	
+	<!-- 
+		웹 사이트 경로에 대한 설정.
+		auto-config="true"
+			일반적으로 설정되는 많은 설정 부분이 자동으로 설정된다.
+		access-denied-handler
+			인증은 통과했지만 해당 요청에 맞는 권한이 없는 경우 보여지는 페이지 경로를 설정한다.
+		intercept-url
+			웹사이트의 모든 경로에 대해서 ROLE_USER 권한이 있어야 접근할 수 있다는 설정이다.
+			인증된 사용자에 대해 ROLE_USER 권한이 없다면 access-denied-handler의 error-page로 리다이렉트 된다.
+		form-login
+			폼 인증을 사용하며, 로그인페이지는 /login 이다.
+			인증이 성공한 경우는 loginSuccessHandler가 처리하며
+			인증이 실패한 경우는 loginFailureHandler가 처리한다.
+		logout
+			로그아웃시 리다이렉트 처리될 페이지를 정의한다.
+	-->
+	<sec:http auto-config="true">
+		<sec:intercept-url pattern="/resources/**" access="permitAll" />
+		<sec:intercept-url pattern="/" access="permitAll" />
+		<sec:intercept-url pattern="/memberlogin" access="permitAll" />
+		<sec:intercept-url pattern="/member/login" access="permitAll" />
+		<sec:intercept-url pattern="/member/registry" access="permitAll" />
+		<sec:intercept-url pattern="/member" access="hasRole('ROLE_USER')" />
+		<sec:intercept-url pattern="/member/**" access="hasRole('ROLE_USER')" />
+		<sec:csrf disabled="true" />
+		<sec:form-login login-page="/" 
+						username-parameter="id"
+						password-parameter="password"
+						login-processing-url="/memberlogin"
+						default-target-url="/member/login"
+						authentication-failure-url="/"
+						always-use-default-target="true"/>
+						
+		<sec:logout logout-success-url="/" logout-url="/member/logout2" invalidate-session="true"/>
+		
+		<sec:session-management invalid-session-url="/">
+			<sec:concurrency-control max-sessions="1" expired-url="/" />
+		</sec:session-management>
+	</sec:http>	
+	
+	
+	<!-- 
+	필요한것인지 모르겠음
+	<bean class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler" />
+	
+		Spring Security에서 사용할 패스워드 인코더 객체를 정의함.
+		이 인코더는 Random Salt 를 적용하는 단방향 해시함수를 사용함
+	<bean id="encoder" class="org.springframework.security.crypto.password.StandardPasswordEncoder" />
+	-->
+	
+	<bean id="userService" class="kr.co.hucloud.security.UserService">
+		<property name="memberDAO" ref="memberDAO" />
+	</bean>
+	
+	<!-- 
+		사용자 비밀번호 인증을 처리할 관리 객체를 정의함
+	-->
+	<sec:authentication-manager>
+		<!-- 
+			Authentication-Manager에게 비밀번호 인증 기능을 제공하는 객체
+			기본적으로 DAOAuthenticationProvider 구현제의 인스턴스가 생성되며,
+			AuthenticationProvider 인터베이스 구현제에 작업을 위임한다.
+		-->
+        <sec:authentication-provider ref="userService" />
+    </sec:authentication-manager> 
+	
+</beans>

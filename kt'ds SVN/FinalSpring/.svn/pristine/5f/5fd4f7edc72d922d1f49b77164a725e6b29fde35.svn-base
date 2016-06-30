@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean	id="finalSpring.member.memberDAO"
+			class="com.ktds.mcjang.member.dao.impl.MemberDAOImpl">
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate" />
+	</bean>
+
+	<bean	id="finalSpring.member.memberBiz"
+			class="com.ktds.mcjang.member.biz.impl.MemberBizImpl">
+		<property name="memberDAO" ref="finalSpring.member.memberDAO" />
+	</bean>
+
+	<bean	id="finalSpring.member.memberService"
+			class="com.ktds.mcjang.member.service.impl.MemberServiceImpl">
+		<property name="loginBiz" ref="finalSpring.login.loginBiz" />
+		<property name="memberBiz" ref="finalSpring.member.memberBiz" />
+		<property name="historyBiz" ref="finalSpring.history.historyBiz" />
+	</bean>
+</beans>

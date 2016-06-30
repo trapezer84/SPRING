@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Reply 관련 -->
+	<bean	id="finalSpring.reply.replyDAO"
+			class="com.ktds.mcjang.board.dao.impl.ReplyDAOImpl">
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate" />	
+	</bean>
+	
+	<bean 	id="finalSpring.reply.replyBiz"
+			class="com.ktds.mcjang.board.biz.impl.ReplyBizImpl">
+		<property name="replyDAO" ref="finalSpring.reply.replyDAO" />
+	</bean>
+	
+	<bean 	id="finalSpring.reply.replyService"
+			class="com.ktds.mcjang.board.service.impl.ReplyServiceImpl">
+		<property name="replyBiz" ref="finalSpring.reply.replyBiz" />
+		<property name="historyBiz" ref="finalSpring.history.historyBiz" />
+		<property name="memberBiz" ref="finalSpring.member.memberBiz" />
+		<property name="loginBiz" ref="finalSpring.login.loginBiz" />
+	</bean>
+	
+	<!-- Board 관련 -->
+	<bean 	id="finalSpring.board.boardDAO"
+			class="com.ktds.mcjang.board.dao.impl.BoardDAOImpl">
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate" />
+	</bean>
+	
+	<bean 	id="finalSpring.board.boardBiz"
+			class="com.ktds.mcjang.board.biz.impl.BoardBizImpl">
+		<property name="boardDAO" ref="finalSpring.board.boardDAO" />
+	</bean>
+	
+	<bean 	id="finalSpring.board.boardService"
+			class="com.ktds.mcjang.board.service.impl.BoardServiceImpl">
+		<property name="boardBiz" ref="finalSpring.board.boardBiz" />
+		<property name="replyBiz" ref="finalSpring.reply.replyBiz" />
+		<property name="historyBiz" ref="finalSpring.history.historyBiz" />
+		<property name="memberBiz" ref="finalSpring.member.memberBiz" />
+		<property name="loginBiz" ref="finalSpring.login.loginBiz" />
+	</bean>
+
+</beans>

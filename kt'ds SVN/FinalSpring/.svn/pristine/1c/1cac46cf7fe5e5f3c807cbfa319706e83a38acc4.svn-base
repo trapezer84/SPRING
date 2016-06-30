@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+				"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+				
+<mapper namespace="memberDAO">
+	
+	<insert id="registAndUpdate" parameterType="UsersVO">
+		MERGE INTO USRS
+		USING DUAL
+		ON (EMAIL_ID = #{emailId})
+		WHEN MATCHED THEN
+		UPDATE SET
+			<if test="password != null">
+				PWD = #{password},
+			</if>
+			<if test="userName != null">
+				USR_NM = #{userName},
+			</if>
+			<if test="deleteFlag != null">
+				DEL_FG = #{deleteFlag},
+			</if>
+			<if test="salt != null">
+				SALT = #{salt},
+			</if>
+			MDFY_DT = SYSDATE
+		WHEN NOT MATCHED THEN
+		INSERT (
+			EMAIL_ID
+			, PWD
+			, USR_NM
+			, CRT_DT
+			, MDFY_DT
+			, DEL_FG
+			, SALT)
+		VALUES (
+			#{emailId}
+			, #{password}
+			, #{userName}
+			, SYSDATE
+			, SYSDATE
+			, #{deleteFlag}
+			, #{salt}
+		)
+	</insert>
+	
+	<select id="checkEmailIdDuplicate" parameterType="string" resultType="_int">
+		SELECT	COUNT(1)
+		FROM 	USRS
+		WHERE	EMAIL_ID = #{emailId}
+		AND		DEL_FG = 'N'
+	</select>
+	
+	
+	
+	<resultMap type="UsersVO" id="loginMap">
+		<id property="emailId" column="EMAIL_ID" />
+		<result property="password" column="PWD" />
+		<result property="userName" column="USR_NM" />
+		<result property="registeredDate" column="CRT_DT" />
+		<result property="modifiedDate" column="MDFY_DT" />
+		<result property="point" column="PNT" />
+	</resultMap>
+	
+	<select id="login" parameterType="UsersVO" resultMap="loginMap">
+		SELECT	EMAIL_ID
+				, PWD
+				, USR_NM
+				, CRT_DT
+				, MDFY_DT
+				, PNT
+		FROM 	USRS
+		WHERE	EMAIL_ID = #{emailId}
+		AND		PWD = #{password}
+		AND		DEL_FG = 'N'
+	</select>
+	
+	<update id="addPoint" parameterType="UsersVO">
+		UPDATE	USRS
+		SET		PNT = PNT + #{point}
+		WHERE	EMAIL_ID = #{emailId}
+		AND		DEL_FG = 'N'
+	</update>
+	
+	<update id="minusPoint" parameterType="UsersVO">
+		UPDATE	USRS
+		SET		PNT = PNT - #{point}
+		WHERE	EMAIL_ID = #{emailId}
+		AND		DEL_FG = 'N'
+	</update>
+	
+</mapper>
+
+
+
+
+
+
+

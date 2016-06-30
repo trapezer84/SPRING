@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+				"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+				
+<mapper namespace="historyDAO">
+	
+	<resultMap type="HistoryVO" id="getHistoryListMap">
+		<id property="historyId" 				column="HIST_ID" />
+		<result property="index" 				column="RNUM" />
+		<result property="ip" 					column="IP" />
+		<result property="operationType" 		column="OPER_TYPE" />
+		<result property="operationDescription" column="OPER_DESC" />
+		<result property="createdDate" 			column="CRT_DT" />
+		<result property="emailId" 				column="EMAIL_ID" />
+	</resultMap>
+	
+	<select id="getHistoryList" 
+			parameterType="HistorySearchVO" 
+			resultMap="getHistoryListMap">
+		SELECT	RNUM
+				, HIST_ID
+				, IP
+				, OPER_TYPE
+				, OPER_DESC
+				, CRT_DT
+				, EMAIL_ID
+		FROM	(
+					SELECT	ROWNUM AS RNUM,
+							ARTICLE.*
+					FROM	(
+								SELECT	HIST_ID
+										, IP
+										, OPER_TYPE
+										, OPER_DESC
+										, CRT_DT
+										, EMAIL_ID
+								FROM 	OPER_HIST
+								ORDER	BY HIST_ID DESC
+							) ARTICLE
+					WHERE	ROWNUM <![CDATA[<=]]> #{endNumber}
+				)
+		WHERE	RNUM >= #{startNumber}
+	</select>
+	
+	<select id="getTotalHistoryCount" 
+			parameterType="HistorySearchVO" 
+			resultType="_int">
+		SELECT	COUNT(1)
+		FROM 	OPER_HIST
+	</select>
+	
+	<insert id="putHistory" parameterType="HistoryVO">
+		INSERT INTO OPER_HIST 	(
+									HIST_ID
+									, IP
+									, OPER_TYPE
+									, OPER_DESC
+									, CRT_DT
+									, EMAIL_ID
+								) 
+		VALUES					( 
+									HIST_ID_SEQ.NEXTVAL
+									, #{ip}
+									, #{operationType}
+									, #{operationDescription}
+									, SYSDATE
+									, #{emailId} 
+								)
+	</insert>
+	
+</mapper>
+
+
+
+
+
+
+

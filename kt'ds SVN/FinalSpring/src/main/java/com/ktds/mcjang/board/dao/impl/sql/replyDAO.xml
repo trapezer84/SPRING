@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+				"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+				
+<mapper namespace="replyDAO">
+	
+	<resultMap type="ReplyVO" id="getRepliesMap">
+		<id 	property="replyId" 		column="RPLY_ID"/>
+		<result property="articleId" 	column="ARTICLE_ID"/>
+		<result property="memberId" 	column="MEMBER_ID"/>
+		<result property="memberName" 	column="USR_NM"/>
+		<result property="content" 		column="CONTENT"/>
+		<result property="createdDate" 	column="CRT_DT"/>
+		<result property="modifiedDate" column="MDFY_DT"/>
+	</resultMap>
+	
+	<select		id="getReplies"	
+				parameterType="_int"
+				resultMap="getRepliesMap">
+		SELECT	R.RPLY_ID
+				, R.ARTICLE_ID
+				, R.MEMBER_ID
+				, U.USR_NM
+				, R.CONTENT
+				, R.CRT_DT
+				, R.MDFY_DT
+		FROM 	RPLY R
+				, USRS U
+		WHERE	U.EMAIL_ID = R.MEMBER_ID
+		AND		R.ARTICLE_ID = #{id}
+		ORDER	BY R.RPLY_ID DESC
+	</select>
+	
+	<select		id="getReply"	
+				parameterType="ReplyVO"
+				resultMap="getRepliesMap">
+		SELECT	R.RPLY_ID
+				, R.ARTICLE_ID
+				, R.MEMBER_ID
+				, U.USR_NM
+				, R.CONTENT
+				, R.CRT_DT
+				, R.MDFY_DT
+		FROM 	RPLY R
+				, USRS U
+		WHERE	U.EMAIL_ID = R.MEMBER_ID
+		AND		R.ARTICLE_ID = #{articleId}
+		AND		R.RPLY_ID = ${replyId}
+	</select>
+	
+	<select		id="getReplyCount"	
+				parameterType="_int"
+				resultType="_int">
+		SELECT	COUNT(1)
+		FROM 	RPLY
+		WHERE	ARTICLE_ID = #{articleId}
+	</select>
+	
+	<insert		id="write"
+				parameterType="ReplyVO">
+		INSERT INTO RPLY 	(
+								RPLY_ID
+								, ARTICLE_ID
+								, MEMBER_ID 
+								, CONTENT
+								, CRT_DT
+								, MDFY_DT
+							) 
+		VALUES 				( 
+								RPLY_ID_SEQ.NEXTVAL
+								, #{articleId} 
+								, #{memberId}
+								, #{content}
+								, SYSDATE
+								, SYSDATE
+							)
+	</insert>
+	
+	<update		id="modify"
+				parameterType="ReplyVO">
+		UPDATE	RPLY
+		SET		CONTENT = #{content}
+				, MDFY_DT = SYSDATE
+		WHERE	RPLY_ID = ${replyId}
+	</update>
+	
+	<delete		id="delete"
+				parameterType="ReplyVO">
+		DELETE	
+		FROM	RPLY
+		WHERE	RPLY_ID = ${replyId}
+	</delete>
+	
+	
+</mapper>
+
+
+
+
+
+
+

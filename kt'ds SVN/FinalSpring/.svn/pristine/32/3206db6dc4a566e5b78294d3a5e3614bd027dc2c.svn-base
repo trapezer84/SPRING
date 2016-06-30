@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+				"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+				
+<mapper namespace="boardDAO">
+	
+	<insert id="write" parameterType="ArticleVO">
+		INSERT INTO BOARD	(
+								ARTICLE_ID
+								, SUBJECT
+								, CONTENT
+								, EMAIL_ID
+								, IS_SCRT
+								, CRT_DT
+								, MDFY_DT
+								, HIT
+							) 
+		VALUES				( 
+								ARTICLE_ID_SEQ.NEXTVAL
+								, #{subject}
+								, #{content}
+								, #{emailId}
+								, 'N'
+								, SYSDATE
+								, SYSDATE
+								, 0 
+							)
+	</insert>
+	
+	<resultMap type="ArticleVO" id="getArticleMap">
+		<id property="articleId" 		column="ARTICLE_ID" />
+		<result property="subject" 		column="SUBJECT" />
+		<result property="content" 		column="CONTENT" />
+		<result property="emailId" 		column="EMAIL_ID" />
+		<result property="userName" 	column="USR_NM" />
+		<result property="isSecret" 	column="IS_SCRT" />
+		<result property="createdDate" 	column="CRT_DT" />
+		<result property="modifiedDate" column="MDFY_DT" />
+		<result property="hit" 			column="HIT" />
+	</resultMap>
+	
+	<select id="getArticle" resultMap="getArticleMap">
+		SELECT 	B.ARTICLE_ID
+				, B.SUBJECT
+				, B.CONTENT
+				, B.EMAIL_ID
+				, U.USR_NM
+				, B.IS_SCRT
+				, B.CRT_DT
+				, B.MDFY_DT
+				, B.HIT
+		FROM 	BOARD B
+				, USRS U 
+		WHERE	B.EMAIL_ID = U.EMAIL_ID
+		AND		B.ARTICLE_ID = #{id}
+	</select>
+	
+	<select id="getArticleCount" 
+			parameterType="ArticleSearchVO"
+			resultType="_int">
+		SELECT 	COUNT(*)
+		FROM 	BOARD B
+				, USRS U
+		WHERE	B.EMAIL_ID = U.EMAIL_ID
+		AND		U.DEL_FG = 'N'
+		AND		B.CRT_DT BETWEEN TO_DATE(#{searchStartDate} || '000000', 'YYYYMMDDHH24MISS')
+		AND 	TO_DATE(#{searchEndDate} || '235959', 'YYYYMMDDHH24MISS')
+		<if test="subject != null and subject != ''">
+		AND		B.SUBJECT LIKE '%' || #{subject} || '%'
+		</if>
+		<if test="content != null and content != ''">
+		AND		B.CONTENT LIKE '%' || #{content} || '%'
+		</if>
+		<if test="isSecret != null and isSecret != ''">
+		AND		B.IS_SCRT = #{isSecret}
+		</if>
+		<if test="author != null and author != ''">
+			<if test="authorKeyword != null and authorKeyword != ''">
+				<if test="author == 'emailId'">
+				AND	U.EMAIL_ID = #{authorKeyword}
+				</if>
+				<if test="author == 'name'">
+				AND	U.USR_NM = #{authorKeyword}
+				</if>
+			</if>
+		</if>
+	</select>
+	
+	<resultMap type="ArticleVO" id="getListMap">
+		<id property="articleId" 		column="ARTICLE_ID" />
+		<result property="subject" 		column="SUBJECT" />
+		<result property="content" 		column="CONTENT" />
+		<result property="userName" 	column="USR_NM" />
+		<result property="isSecret" 	column="IS_SCRT" />
+		<result property="createdDate" 	column="CRT_DT" />
+		<result property="modifiedDate" column="MDFY_DT" />
+		<result property="hit" 			column="HIT" />
+	</resultMap>
+	
+	<select id="getList" parameterType="ArticleSearchVO" resultMap="getListMap">
+		SELECT	ARTICLE_ID, SUBJECT, CONTENT
+				, USR_NM, IS_SCRT, CRT_DT, MDFY_DT, HIT
+		FROM	(
+					SELECT	ROWNUM AS RNUM, A.*
+					FROM	(
+								SELECT 	B.ARTICLE_ID, B.SUBJECT
+										, B.CONTENT, U.USR_NM
+										, B.IS_SCRT, B.CRT_DT
+										, B.MDFY_DT, B.HIT
+								FROM 	BOARD B, USRS U
+								WHERE	B.EMAIL_ID = U.EMAIL_ID
+								AND		U.DEL_FG = 'N'
+								AND		B.CRT_DT BETWEEN TO_DATE(#{searchStartDate} || '000000', 'YYYYMMDDHH24MISS')
+								AND 	TO_DATE(#{searchEndDate} || '235959', 'YYYYMMDDHH24MISS')
+								<if test="subject != null and subject != ''">
+								AND		B.SUBJECT LIKE '%' || #{subject} || '%'
+								</if>
+								<if test="content != null and content != ''">
+								AND		B.CONTENT LIKE '%' || #{content} || '%'
+								</if>
+								<if test="isSecret != null and isSecret != ''">
+								AND		B.IS_SCRT = #{isSecret}
+								</if>
+								ORDER	BY B.ARTICLE_ID DESC
+							) A
+					WHERE	ROWNUM <![CDATA[<=]]> #{paging.endArticleNumber}
+				)
+		WHERE	RNUM >= #{paging.startArticleNumber}
+	</select>
+	
+	<update id="modify" parameterType="ArticleVO">
+		UPDATE	BOARD
+		SET		
+				<if test="subject != null and subject != ''">
+				SUBJECT = #{subject},
+				</if>
+				<if test="content != null and content != ''">
+				CONTENT = #{content},
+				</if>
+				IS_SCRT = #{isSecret},
+				MDFY_DT = SYSDATE
+		WHERE	ARTICLE_ID = #{articleId}
+		AND		EMAIL_ID = #{emailId}
+	</update>
+	
+	<delete id="delete" parameterType="ArticleVO">
+		DELETE	
+		FROM	BOARD
+		WHERE	ARTICLE_ID = #{articleId}
+		AND		EMAIL_ID = #{emailId}
+	</delete>
+	
+</mapper>
+
+
+
+
+
+
+

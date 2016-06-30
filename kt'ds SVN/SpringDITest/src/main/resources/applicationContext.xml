@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Bean : 새로운 객체(인스턴스) -->
+
+	<!-- LoginDAOImpl loginDAO = new LoginDAOImpl(); -->
+	<bean id="loginDAO"
+			class="com.ktds.cocomo.LoginDAOImpl"></bean>
+
+	<!-- LoginBizImpl loginBiz = new LoginBizImpl(); -->
+	<bean id="loginBiz"
+			class="com.ktds.cocomo.LoginBizImpl">
+			
+		<!-- LoginBiz.setLoginDAO(loginDAO); -->
+		<property name="loginDAO" ref="loginDAO" />
+		<!-- property : setter -->
+		<!-- value, ref : setter에 들어가는 파라미터 -->
+		<!-- value : String을 포함한 Primitive Type -->
+		<!-- ref : 그 이외의 Type -->
+				
+	</bean>
+
+	<!-- 이렇게 해놓으면 Spring이 내부적으로 객체로 만들어준다. -->
+</beans>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+
+	<context:property-placeholder location="classpath:/jdbc/datasources.properties" />
+
+	<bean 	id="dataSource"
+			class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${jdbc.driverName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.userName}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+	
+	<bean 	id="jdbcTemplate"
+			class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean 	id="sample2DAO"
+			class="com.hucloud.spring.jdbc.sample2.Sample2DAOImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="queries">
+			<list>
+				<value>
+					SELECT 	NOTE_NUMBER, NOTE_SUBJECT, NOTE_CONTENT
+					FROM 	NOTE
+				</value>
+				<value>
+					SELECT 	NOTE_NUMBER, NOTE_SUBJECT, NOTE_CONTENT
+					FROM 	NOTE
+					WHERE	NOTE_NUMBER = ?
+				</value>
+				<value>
+					INSERT INTO NOTE (NOTE_NUMBER, NOTE_SUBJECT, NOTE_CONTENT) 
+					VALUES ( NOTE_NUMBER_SEQ.NEXTVAL, ?, ? )
+				</value>
+				<value>
+					UPDATE NOTE
+					SET    NOTE_SUBJECT = ?,
+					       NOTE_CONTENT = ?
+					WHERE  NOTE_NUMBER  = ?
+				</value>
+				<value>
+					DELETE
+					FROM	NOTE
+					WHERE	NOTE_NUMBER = ?
+				</value>
+				<value>
+					SELECT	NOTE_NUMBER_SEQ.CURRVAL
+					FROM	DUAL
+				</value>
+			</list>
+		</property>
+	</bean>
+
+</beans>
+

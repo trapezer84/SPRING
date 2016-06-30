@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!--
+		Controller 탐색을 위한 HandlerMapping과 HandlerAdapter를
+		자동으로 설정해준다.
+		mvc:annotation-driven을 사용하지 않을 경우
+		HandlerMapping과 HanlderAdapter는 수동으로 설정해야 한다.
+	-->
+	<mvc:annotation-driven />
+	
+	<!--
+		정적자원 설정하는 부분.
+		MVC 를 사용하게 되면 정적 자원에 대한 접근이 불가능해진다.
+		그 이유는 모든 요청을 DispatcherServlet 이 받아서 처리하기 때문인데,
+		DispatcherServlet으로 요청을 할 경우 정적자원에 대한 접근을 할 수 없다.
+		때문에 정적자원에 대한 접근 설정을 따로 해주어야 하는데,
+		이 부분이 mvc:resources 부분이다.
+		
+		mvc:resources 는 location 과 mapping 속성을 가진다.
+		location은 정적자원이 존재하는 위치를 뜻하고
+		mapping을 정적자원에 접근하기 위한 URL을 의미한다.
+		
+		아래 설정은 
+		http://localhost:8080/ContextPath/resources/js/jquery.js
+		로 요청할 경우
+		/WEB-INF/resources/js/jquery.js 를 찾게 하는 설정이다.
+		
+		resources 는 중복하여 설정할 수 도 있는데
+		아래처럼 URL을 각각 다르게 해서 접근하도록 할 수 도 있다.
+		<mvc:resources	location="/WEB-INF/resources/js/" 
+						mapping="/js/**" />
+		<mvc:resources	location="/WEB-INF/resources/css/" 
+						mapping="/css/**" />
+		<mvc:resources	location="/WEB-INF/resources/img/" 
+						mapping="/img/**" />
+	-->
+	<mvc:resources	location="/WEB-INF/resources/" 
+					mapping="/resources/**" />
+	
+	<!--
+		Controller에서 ModelAndView 를 이용한 View를 찾을 때 사용된다.
+		ModelAndView.setViewName(ViewName); 으로 View를 찾는다.
+		
+		이 때, View 는 viewResolver에 등록된 경로로 찾아가는데
+		prefix + ViewName + suffix 의 조합으로 찾는다.
+		예를 들어, ModelAndView.setViewName("board/list"); 로 
+		정했다면 실제 View의 위치는
+		/WEB-INF/view/board/list.jsp 가 된다.
+		/WEB-INF/view/ 는 prefix에 설정된 내용이고
+		.jsp 는 suffix에 설정된 내용이다.
+		
+		* Controller 에서 String을 Return 할 경우에도
+		  viewName을 찾는다.
+	-->
+	<bean	id="viewResolver"
+			class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/view/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	<!--
+		commons-file-upload 라이브러리를 이용해서
+		파일을 업로드할 수 있도록 지원하는 Resolver.
+		설정은 defaultEncoding과 maxUploadSize만 해주면 된다.
+		maxUploadSize는 업로드를 할 수 있는 최대 용량을 설정하는 것이며
+		최소 단위는 1byte 로 한다.
+		1byte * 1024 = 1kb
+		1killo byte * 1024 = 1mb
+		1mega byte * 1024 = 1gb
+	-->
+	<bean	id="multipartViewResolver"
+			class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="UTF-8" />
+		<!-- 
+			1024 byte * 1024 byte = 1mb
+			1mb * 100 = 100mb
+			100mb = 104857600
+		-->
+		<property name="maxUploadSize" value="104857600" />
+	</bean>
+
+</beans>
+
+
+

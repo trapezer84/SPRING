@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<bean	id="finalSpring.login.loginDAO"
+			class="com.ktds.mcjang.login.dao.impl.LoginDAOImpl">
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate" />
+	</bean>
+	
+	<bean	id="finalSpring.login.loginBiz"
+			class="com.ktds.mcjang.login.biz.impl.LoginBizImpl">
+		<property name="loginDAO" ref="finalSpring.login.loginDAO" />
+	</bean>
+
+	<bean	id="finalSpring.login.loginService"
+			class="com.ktds.mcjang.login.service.impl.LoginServiceImpl">
+		<property name="loginBiz" ref="finalSpring.login.loginBiz" />
+		<property name="historyBiz" ref="finalSpring.history.historyBiz" />
+		
+	</bean>
+
+</beans>

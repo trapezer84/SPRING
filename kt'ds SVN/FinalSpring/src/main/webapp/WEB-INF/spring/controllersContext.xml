@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean	id="memberController"
+			class="com.ktds.mcjang.member.web.MemberController">
+		<property name="memberService" ref="finalSpring.member.memberService" />
+	</bean>
+	
+	<bean	id="loginController"
+			class="com.ktds.mcjang.login.web.LoginController">
+		<property name="loginService" ref="finalSpring.login.loginService" />
+	</bean>
+	
+	<bean	id="historyController"
+			class="com.ktds.mcjang.history.web.HistoryController">
+		<property name="historyService" ref="finalSpring.history.historyService" />
+	</bean>
+	
+	<bean	id="boardController"
+			class="com.ktds.mcjang.board.web.BoardController">
+		<property name="boardService" ref="finalSpring.board.boardService" />
+	</bean>
+	
+	<bean	id="replyController"
+			class="com.ktds.mcjang.board.web.ReplyController">
+		<property name="replyService" ref="finalSpring.reply.replyService" />
+	</bean>
+	
+</beans>

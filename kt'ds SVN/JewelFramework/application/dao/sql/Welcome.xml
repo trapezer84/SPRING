@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<Query>
+	<select id="testQuery" returnType="core\util\Map">
+		SELECT	'queryTest' as col
+	</select>
+</Query>

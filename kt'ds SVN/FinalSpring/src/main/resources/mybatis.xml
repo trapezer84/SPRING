@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+					"http://mybatis.org/dtd/mybatis-3-config.dtd">
+					
+<configuration>
+	
+	<typeAliases>
+		<typeAlias type="com.ktds.mcjang.history.vo.HistoryVO" alias="HistoryVO" />
+		<typeAlias type="com.ktds.mcjang.history.vo.HistorySearchVO" alias="HistorySearchVO" />
+		<typeAlias type="com.ktds.mcjang.login.vo.UsersVO" alias="UsersVO" />
+		<typeAlias type="com.ktds.mcjang.board.vo.ArticleVO" alias="ArticleVO" />
+		<typeAlias type="com.ktds.mcjang.board.vo.ArticleSearchVO" alias="ArticleSearchVO" />
+		<typeAlias type="com.ktds.mcjang.board.vo.ReplyVO" alias="ReplyVO" />
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="/com/ktds/mcjang/login/dao/impl/sql/loginDAO.xml" />
+		<mapper resource="/com/ktds/mcjang/member/dao/impl/sql/memberDAO.xml" />
+		<mapper resource="/com/ktds/mcjang/history/dao/impl/sql/historyDAO.xml" />
+		<mapper resource="/com/ktds/mcjang/board/dao/impl/sql/boardDAO.xml" />
+		<mapper resource="/com/ktds/mcjang/board/dao/impl/sql/replyDAO.xml" />
+	</mappers>
+	
+</configuration>
