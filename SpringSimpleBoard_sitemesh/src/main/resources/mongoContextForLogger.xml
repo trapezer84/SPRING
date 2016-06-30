@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.8.xsd">
+
+<!-- mongo -->
+	<!-- 몽고DB로 접속할 수 있는 것이 필요함 -->
+	<mongo:mongo-client host="localhost" port="27017">
+		<!-- client-options은 할 필요가 없지만, 일반적으로 해준다 -->
+		<mongo:client-options
+			connections-per-host="8"
+			threads-allowed-to-block-for-connection-multiplier="4"
+			connect-timeout="1000" 
+			max-wait-time="1500"
+			socket-keep-alive="false"
+			socket-timeout="1500"
+		/>
+	</mongo:mongo-client>
+	
+	<bean id="mongoTemplate"
+			class="org.springframework.data.mongodb.core.MongoTemplate">
+			<!-- ref="mongo"는 위에 적은 mongo-client를 의미한다 -->
+			<constructor-arg name="mongo" ref="mongo" /> <!-- 타입이 다를 경우에는 분리시켜서 적어준다 -->
+			<constructor-arg name="databaseName" value="log" />
+	
+	</bean>
+</beans>

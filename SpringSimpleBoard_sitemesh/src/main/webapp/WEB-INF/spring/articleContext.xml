@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean id="operationHistoryDAO"
+			class="com.ktds.hskim.article.dao.impl.OperationHistoryDAOForMongoDB">
+			<property name="mongoTemplate" ref="mongoTemplate"></property>
+	</bean>
+	
+	<bean id="articleDAO"
+			class="com.ktds.hskim.article.dao.impl.ArticleDAOImpl">
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate" />
+	</bean>
+	
+	<bean id="articleBiz"
+			class="com.ktds.hskim.article.biz.impl.ArticleBizImpl" >
+		<property name="articleDAO" ref="articleDAO" />
+		<property name="operationHistoryDAO" ref="operationHistoryDAO"></property>
+	</bean>
+	
+	<bean id="articleService"
+			class="com.ktds.hskim.article.service.impl.ArticleServiceImpl" >
+		<property name="articleBiz" ref="articleBiz" />
+	</bean>			
+	
+
+</beans>
